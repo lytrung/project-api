@@ -1,0 +1,13 @@
+npm init
+npm install --save express
+npm install --save mongoose
+npm install --save body-parser
+npm install --save cors
+
+const mongoose = require("mongoose");
+var express = require('express');
+var bodyParser = require('body-parser');
+var router = express.Router();
+const logger = require("morgan");
+var cors = require('cors');
+const Staff = require("./staff-model");
