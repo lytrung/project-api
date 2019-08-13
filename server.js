@@ -1,13 +1,13 @@
-const mongoose = require("mongoose");
+var mongoose = require('mongoose');
 var express = require('express');
 var bodyParser = require('body-parser');
-const logger = require('morgan');
+var logger = require('morgan');
 var cors = require('cors');
 
-const Project = require('./project-model');
+var Project = require('./project-model');
 
 //setup database connection
-const connectionString = 'mongodb://demo2admin:demo2password@cluster0-shard-00-00-1fbjw.mongodb.net:27017,cluster0-shard-00-01-1fbjw.mongodb.net:27017,cluster0-shard-00-02-1fbjw.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true&w=majority';
+var connectionString = 'mongodb://demo2admin:demo2password@cluster0-shard-00-00-1fbjw.mongodb.net:27017,cluster0-shard-00-01-1fbjw.mongodb.net:27017,cluster0-shard-00-02-1fbjw.mongodb.net:27017/portfolio?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true&w=majority';
 mongoose.connect(connectionString,{ useNewUrlParser: true });
 var  db = mongoose.connection;
 db.once('open', () => console.log('Database connected'));
@@ -24,10 +24,26 @@ app.use(logger('dev'));
 //setup routes
 var router = express.Router();
 router.get('/testing', function (req, res) {
-  res.send('Testing is working')
+  res.send('<h1>Testing is working</h1>')
 })
 
 app.use('/api', router);
+
+router.get('/projects', function (req, res) {
+
+	Project.find((err, projects) => {
+	    if (err) return res.json({ success: false, error: err });
+	    return res.json({ success: true, projects: projects });
+	});
+})
+
+router.get('/projects/:id', function (req, res) {
+
+	Project.findOne({id:req.params.id},(err, project) => {
+	    if (err) return res.json({ success: false, error: err });
+	    return res.json({ success: true, project: project });
+	});
+})
 
 router.post('/projects', (req, res) => {
 
@@ -44,7 +60,31 @@ router.post('/projects', (req, res) => {
 	});
 });
 
+router.delete('/projects/:id', (req, res) => {
+
+	Project.deleteOne({ id: req.params.id }, (err) => {
+	  if (err) return res.json({ success: false, error: err });
+	  return res.json({ success: true });
+	});
+});
+
+router.put('/projects/:id', (req, res) => {
+
+	Project.findOne({id:req.params.id}, (err, project) => {
+
+		var {name, description } = req.body;
+		project.name = name;
+		project.description = description;
+		
+		project.save().then((project) => {
+			if (err) return res.json({ success: false, error: err });
+			return res.json({ success: true, project: project  });
+		});
+		
+	});
+});
+
 
 // launch our backend into a port
 const apiPort = 3001;
-app.listen(apiPort, () => console.log('Listen on port '+apiPort));
+app.listen(apiPort, () => console.log('Listening on port '+apiPort));
