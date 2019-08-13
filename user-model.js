@@ -1,16 +1,16 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
 
 // this will be our data base's data structure 
-const ProjectSchema = new Schema(
+var UserSchema = new Schema(
   {
     id: Number,
     name: String,
     description: String,
-    user_id: Number
+    role: String
   },
   { timestamps: true }
 );
 
 // export the new Schema so we could modify it using Node.js
-module.exports = mongoose.model('Project', ProjectSchema);
+module.exports = mongoose.model('User', UserSchema);

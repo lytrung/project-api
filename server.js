@@ -5,6 +5,7 @@ var logger = require('morgan');
 var cors = require('cors');
 
 var Project = require('./project-model');
+var User = require('./user-model');
 
 //setup database connection
 var connectionString = 'mongodb://demo2admin:demo2password@cluster0-shard-00-00-1fbjw.mongodb.net:27017,cluster0-shard-00-01-1fbjw.mongodb.net:27017,cluster0-shard-00-02-1fbjw.mongodb.net:27017/portfolio?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true&w=majority';
@@ -80,6 +81,71 @@ router.put('/projects/:id', (req, res) => {
 	});	
 
 });
+
+router.get('/users', (req, res) => {
+
+	User.find()
+	.then((users) => {
+	    return res.json(users);
+	});
+
+})
+
+router.get('/users/:id', (req, res) => {
+
+
+	User.findOne({id:req.params.id})
+	.then((user) => {
+	    return res.json(user);
+	});
+})
+
+router.get('/users/:id/projects', (req, res) => {
+
+
+	Project.find({user_id:req.params.id})
+	.then((projects) => {
+	    return res.json(projects);
+	});
+
+})
+
+router.post('/users', (req, res) => {
+
+	var user = new User();
+	user.id = Date.now();
+	
+	var data = req.body;
+	Object.assign(user,data);
+	
+	user.save()
+	.then((user) => {
+	  	return res.json(user);
+	});
+});
+
+router.delete('/users/:id', (req, res) => {
+
+	User.deleteOne({ id: req.params.id })
+	.then(() => {
+		return res.json('deleted');
+	});
+});
+
+router.put('/users/:id', (req, res) => {
+
+	User.findOne({id:req.params.id})
+	.then((user) => {
+		var data = req.body;
+		Object.assign(user,data);
+		return user.save()	
+	})
+	.then((user) => {
+		return res.json(user);
+	});	
+
+});
+
 
 app.use('/api', router);
 
