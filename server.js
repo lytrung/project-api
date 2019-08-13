@@ -23,67 +23,65 @@ app.use(logger('dev'));
 
 //setup routes
 var router = express.Router();
-router.get('/testing', function (req, res) {
+
+router.get('/testing', (req, res) => {
   res.send('<h1>Testing is working</h1>')
 })
 
-app.use('/api', router);
+router.get('/projects', (req, res) => {
 
-router.get('/projects', function (req, res) {
-
-	Project.find((err, projects) => {
-	    if (err) return res.json({ success: false, error: err });
-	    return res.json({ success: true, projects: projects });
+	Project.find()
+	.then((projects) => {
+	    return res.json(projects);
 	});
+
 })
 
-router.get('/projects/:id', function (req, res) {
+router.get('/projects/:id', (req, res) => {
 
-	Project.findOne({id:req.params.id},(err, project) => {
-	    if (err) return res.json({ success: false, error: err });
-	    return res.json({ success: true, project: project });
+	Project.findOne({id:req.params.id})
+	.then((project) => {
+	    return res.json(project);
 	});
 })
 
 router.post('/projects', (req, res) => {
 
-	var {name, description } = req.body;
-	// console.log(req.body);
 	var project = new Project();
 	project.id = Date.now();
-	project.name = name;
-	project.description = description;
 	
-	project.save(err => {
-	  	if (err) return res.json({ success: false, error: err });
-	  	return res.json({ success: true, project: project });
+	var data = req.body;
+	Object.assign(project,data);
+	
+	project.save()
+	.then((project) => {
+	  	return res.json(project);
 	});
 });
 
 router.delete('/projects/:id', (req, res) => {
 
-	Project.deleteOne({ id: req.params.id }, (err) => {
-	  if (err) return res.json({ success: false, error: err });
-	  return res.json({ success: true });
+	Project.deleteOne({ id: req.params.id })
+	.then(() => {
+		return res.json('deleted');
 	});
 });
 
 router.put('/projects/:id', (req, res) => {
 
-	Project.findOne({id:req.params.id}, (err, project) => {
+	Project.findOne({id:req.params.id})
+	.then((project) => {
+		var data = req.body;
+		Object.assign(project,data);
+		return project.save()	
+	})
+	.then((project) => {
+		return res.json(project);
+	});	
 
-		var {name, description } = req.body;
-		project.name = name;
-		project.description = description;
-		
-		project.save().then((project) => {
-			if (err) return res.json({ success: false, error: err });
-			return res.json({ success: true, project: project  });
-		});
-		
-	});
 });
 
+app.use('/api', router);
 
 // launch our backend into a port
 const apiPort = 3001;

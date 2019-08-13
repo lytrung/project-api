@@ -1,8 +1,8 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
 
 // this will be our data base's data structure 
-const ProjectSchema = new Schema(
+var ProjectSchema = new Schema(
   {
     id: Number,
     name: String,
