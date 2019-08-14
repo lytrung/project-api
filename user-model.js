@@ -7,7 +7,7 @@ var UserSchema = new Schema(
     id: Number,
     name: String,
     description: String,
-    role: String
+    role: String,
   },
   { timestamps: true }
 );
