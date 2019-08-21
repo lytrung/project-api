@@ -7,7 +7,9 @@ const ProjectSchema = new Schema(
     id: Number,
     name: String,
     description: String,
-    user_id: Number
+    photo:String,
+    type_id: Number
+    // user_id: Number
   },
   { timestamps: true }
 );

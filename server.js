@@ -6,6 +6,7 @@ var cors = require('cors');
 
 var Project = require('./project-model');
 var User = require('./user-model');
+var Type = require('./type-model');
 
 //setup database connection
 var connectionString = 'mongodb://demo2admin:demo2password@cluster0-shard-00-00-1fbjw.mongodb.net:27017,cluster0-shard-00-01-1fbjw.mongodb.net:27017,cluster0-shard-00-02-1fbjw.mongodb.net:27017/portfolio?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true&w=majority';
@@ -52,6 +53,7 @@ router.post('/projects', (req, res) => {
 	project.id = Date.now();
 	
 	var data = req.body;
+	console.log(data);
 	Object.assign(project,data);
 	
 	project.save()
@@ -145,6 +147,17 @@ router.put('/users/:id', (req, res) => {
 	});	
 
 });
+
+router.get('/types', (req, res) => {
+
+	Type.find()
+	.then((types) => {
+
+	    return res.json(types);
+	});
+
+})
+
 
 
 app.use('/api', router);
