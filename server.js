@@ -3,6 +3,7 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var logger = require('morgan');
 var cors = require('cors');
+var fileUpload = require('express-fileupload');
 
 var Project = require('./project-model');
 var User = require('./user-model');
@@ -21,7 +22,13 @@ var app = express();
 app.use(cors());
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+
+app.use(fileUpload());
+
 app.use(logger('dev'));
+
+
+app.use(express.static('public'))
 
 //setup routes
 var router = express.Router();
@@ -157,6 +164,19 @@ router.get('/types', (req, res) => {
 	});
 
 })
+
+router.post('/upload', (req, res) => {
+
+	var files = Object.values(req.files);
+	var uploadedFile = files[0];
+
+	var newName = Date.now() + uploadedFile.name;
+
+	uploadedFile.mv('public/'+ newName, function(){
+		res.send(newName)
+	})
+	
+});
 
 
 
