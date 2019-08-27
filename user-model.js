@@ -6,8 +6,9 @@ var UserSchema = new Schema(
   {
     id: Number,
     name: String,
-    description: String,
-    role: String,
+    username: String,
+    password: String,
+    email: String,
   },
   { timestamps: true }
 );
