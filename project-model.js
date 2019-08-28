@@ -9,7 +9,8 @@ const ProjectSchema = new Schema(
     description: String,
     photo:String,
     type_id: Number,
-    // user_id: Number
+    user_id: Number
+
   },
   { timestamps: true }
 );
