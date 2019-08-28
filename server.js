@@ -109,15 +109,6 @@ router.get('/users/:id', (req, res) => {
 	});
 })
 
-router.get('/users/:id/projects', (req, res) => {
-
-
-	Project.find({user_id:req.params.id})
-	.then((projects) => {
-	    return res.json(projects);
-	});
-
-})
 
 router.post('/users', (req, res) => {
 
@@ -161,6 +152,17 @@ router.get('/types', (req, res) => {
 	.then((types) => {
 
 	    return res.json(types);
+	});
+
+})
+
+router.get('/types/:id', (req, res) => {
+
+	Type.findOne({id:req.params.id})
+	.populate('projects')
+	.then((type) => {
+
+	    return res.json(type);
 	});
 
 })

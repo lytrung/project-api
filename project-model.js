@@ -8,11 +8,12 @@ const ProjectSchema = new Schema(
     name: String,
     description: String,
     photo:String,
-    type_id: Number
+    type_id: Number,
     // user_id: Number
   },
   { timestamps: true }
 );
+
 
 // export the new Schema so we could modify it using Node.js
 module.exports = mongoose.model('Project', ProjectSchema);
