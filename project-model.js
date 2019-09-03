@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+var Reviews = require('./review-model');
 
 // this will be our data base's data structure 
 const ProjectSchema = new Schema(
@@ -10,10 +11,19 @@ const ProjectSchema = new Schema(
     photo:String,
     type_id: Number,
     user_id: Number
-
-  },
-  { timestamps: true }
+   },
+  { 
+  	timestamps: true,
+  	toJSON: { virtuals: true }
+  }
 );
+
+ProjectSchema.virtual('reviews', {
+  ref: 'Review', // The model to use
+  localField: 'id', 
+  foreignField: 'project_id', 
+  justOne: false,
+});
 
 
 // export the new Schema so we could modify it using Node.js

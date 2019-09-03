@@ -8,6 +8,7 @@ var fileUpload = require('express-fileupload');
 var Project = require('./project-model');
 var User = require('./user-model');
 var Type = require('./type-model');
+var Review = require('./review-model');
 
 //setup database connection
 var connectionString = 'mongodb://demo2admin:demo2password@cluster0-shard-00-00-1fbjw.mongodb.net:27017,cluster0-shard-00-01-1fbjw.mongodb.net:27017,cluster0-shard-00-02-1fbjw.mongodb.net:27017/portfolio?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true&w=majority';
@@ -38,17 +39,19 @@ router.get('/testing', (req, res) => {
 })
 
 router.get('/projects', (req, res) => {
-
 	Project.find()
 	.then((projects) => {
 	    return res.json(projects);
 	});
-
 })
 
 router.get('/projects/:id', (req, res) => {
 
 	Project.findOne({id:req.params.id})
+	.populate({
+		path:'reviews',
+		populate:'user'
+	})
 	.then((project) => {
 	    return res.json(project);
 	});
@@ -166,6 +169,20 @@ router.get('/types/:id', (req, res) => {
 	});
 
 })
+
+router.post('/reviews', (req, res) => {
+
+	var review = new Review();
+	review.id = Date.now();
+	
+	var data = req.body;
+	Object.assign(review,data);
+	
+	review.save()
+	.then((review) => {
+	  	return res.json(review);
+	});
+});
 
 router.post('/upload', (req, res) => {
 
