@@ -184,6 +184,14 @@ router.post('/reviews', (req, res) => {
 	});
 });
 
+router.delete('/reviews/:id', (req, res) => {
+
+	Review.deleteOne({ id: req.params.id })
+	.then(() => {
+		return res.json('deleted');
+	});
+});
+
 router.post('/upload', (req, res) => {
 
 	var files = Object.values(req.files);
