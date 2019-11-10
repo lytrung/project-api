@@ -9,6 +9,7 @@ var Project = require('./project-model');
 var User = require('./user-model');
 var Type = require('./type-model');
 var Review = require('./review-model');
+var Todo = require('./todo-model');
 
 //setup database connection
 var connectionString = 'mongodb://demo2admin:demo2password@cluster0-shard-00-00-1fbjw.mongodb.net:27017,cluster0-shard-00-01-1fbjw.mongodb.net:27017,cluster0-shard-00-02-1fbjw.mongodb.net:27017/portfolio?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true&w=majority';
@@ -45,6 +46,13 @@ router.get('/projects', (req, res) => {
 	});
 })
 
+router.get('/todos', (req, res) => {
+	Todo.find()
+	.then((todos) => {
+	    return res.json(todos);
+	});
+})
+
 router.get('/projects/:id', (req, res) => {
 
 	Project.findOne({id:req.params.id})
@@ -72,9 +80,32 @@ router.post('/projects', (req, res) => {
 	});
 });
 
+router.post('/todos', (req, res) => {
+
+	var project = new Todo();
+	project.id = Date.now();
+	
+	var data = req.body;
+	
+	Object.assign(project,data);
+	
+	project.save()
+	.then((project) => {
+	  	return res.json(project);
+	});
+});
+
 router.delete('/projects/:id', (req, res) => {
 
 	Project.deleteOne({ id: req.params.id })
+	.then(() => {
+		return res.json('deleted');
+	});
+});
+
+router.delete('/todos/:id', (req, res) => {
+
+	Todo.deleteOne({ id: req.params.id })
 	.then(() => {
 		return res.json('deleted');
 	});
