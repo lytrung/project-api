@@ -10,6 +10,7 @@ var User = require('./user-model');
 var Type = require('./type-model');
 var Review = require('./review-model');
 var Todo = require('./todo-model');
+var Name = require('./name-model');
 
 //setup database connection
 var connectionString = 'mongodb://demo2admin:demo2password@cluster0-shard-00-00-1fbjw.mongodb.net:27017,cluster0-shard-00-01-1fbjw.mongodb.net:27017,cluster0-shard-00-02-1fbjw.mongodb.net:27017/portfolio?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true&w=majority';
@@ -53,6 +54,13 @@ router.get('/todos', (req, res) => {
 	});
 })
 
+router.get('/names', (req, res) => {
+	Name.find()
+	.then((names) => {
+	    return res.json(names);
+	});
+})
+
 router.get('/projects/:id', (req, res) => {
 
 	Project.findOne({id:req.params.id})
@@ -80,6 +88,18 @@ router.post('/projects', (req, res) => {
 	});
 });
 
+
+router.post('/names', (req, res) => {
+
+	var project = new Name();
+	var data = req.body;
+	Object.assign(project,data);
+	
+	project.save()
+	.then((project) => {
+	  	return res.json(project);
+	});
+});
 router.post('/todos', (req, res) => {
 
 	var project = new Todo();
@@ -125,6 +145,20 @@ router.put('/projects/:id', (req, res) => {
 
 });
 
+
+router.put('/names/:id', (req, res) => {
+
+	Name.findOne({id:req.params.id})
+	.then((project) => {
+		var data = req.body;
+		Object.assign(project,data);
+		return project.save()	
+	})
+	.then((project) => {
+		return res.json(project);
+	});	
+
+});
 router.get('/users', (req, res) => {
 
 	User.find()
