@@ -146,6 +146,23 @@ router.put('/projects/:id', (req, res) => {
 });
 
 
+router.put('/names', (req, res) => {
+
+
+	Name.find()
+	.then((names) => {
+		console.log(names)
+		for(let i=0;i<names.length;i++){
+			names[i].location=''
+			names[i].save()
+		}
+	    return res.json('cleared')
+	});
+	
+	
+
+});
+
 router.put('/names/:id', (req, res) => {
 
 	Name.findOne({id:req.params.id})
@@ -159,6 +176,8 @@ router.put('/names/:id', (req, res) => {
 	});	
 
 });
+
+
 router.get('/users', (req, res) => {
 
 	User.find()
