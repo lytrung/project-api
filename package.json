@@ -18,6 +18,6 @@
   },
 
 
-  "engines" : { "npm" : "10.0" },
-  "engineStrict" : true
+  // "engines" : { "npm" : "10.0" },
+  // "engineStrict" : true
 }
