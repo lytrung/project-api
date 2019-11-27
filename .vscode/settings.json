@@ -1,4 +1,8 @@
 {
     "appService.defaultWebAppToDeploy": "/subscriptions/9381f845-8dfa-46d9-8ff9-78ca133eef9c/resourceGroups/NodeSite/providers/Microsoft.Web/sites/duckies-api",
-    "appService.deploySubpath": ""
+    "appService.deploySubpath": "",
+    "appService.zipIgnorePattern": [
+        "node_modules{,/**}",
+        ".vscode{,/**}"
+    ]
 }
